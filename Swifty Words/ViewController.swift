@@ -38,21 +38,49 @@ class ViewController: UIViewController {
     // MARK: - IBAction Properties
     
     @IBAction func submitButtonTapped(sender: UIButton) {
+        if let solutionPosition = self.solutions.indexOf(self.currentAnswerTextField.text!) {
+            self.activatedButtons.removeAll()
+            
+            var splitClues = self.answersLabel.text!.componentsSeparatedByString("\n")
+            splitClues[solutionPosition] = self.currentAnswerTextField.text!
+            self.answersLabel.text = "\n".join(splitClues)
+            
+            self.currentAnswerTextField.text = ""
+            ++self.gameScore
+            
+            if self.gameScore % 7 == 0 {
+                let actionController = UIAlertController(title: "Congratulations!", message: "Are you ready for the next level?", preferredStyle: UIAlertControllerStyle.Alert)
+                actionController.addAction(UIAlertAction(title: "Let's go!!", style: UIAlertActionStyle.Default, handler: nil))
+                self.presentViewController(actionController, animated: true, completion: nil)
+            }
+            
+        }
     }
     
     @IBAction func clearButtonTapped(sender: UIButton) {
+        self.currentAnswerTextField.text = ""
+        for button in self.activatedButtons {
+            button.hidden = false
+        }
+        self.activatedButtons.removeAll()
     }
     
     // MARK: - Stored Properties
     
     var letterButtons = [UIButton]()
-    let activatedButtons = [UIButton]()
+    var activatedButtons = [UIButton]()
     var solutions = Array<String>()
     
     var gameScore = 0
     var gameLevel = 1
     
     // MARK: - Custom Methods
+    
+    func letterTapped(button: UIButton) {
+        self.currentAnswerTextField.text! += button.titleLabel!.text!
+        self.activatedButtons.append(button)
+        button.hidden = true
+    }
     
     func loadLevel() {
         var clueString = String()
