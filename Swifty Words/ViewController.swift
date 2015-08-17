@@ -19,7 +19,21 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
+    // MARK: - IBOutlet Properties
+    
+    @IBOutlet weak var cluesLabel: UILabel!
+    @IBOutlet weak var answersLabel: UILabel!
+    @IBOutlet weak var currentAnswerTextField: UITextField!
+    @IBOutlet weak var scoreLabel: UILabel!
+    
+    // MARK: - IBAction Properties
+    
+    @IBAction func submitButtonTapped(sender: UIButton) {
+    }
+    
+    @IBAction func clearButtonTapped(sender: UIButton) {
+    }
 
 }
 
