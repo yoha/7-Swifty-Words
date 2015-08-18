@@ -16,8 +16,8 @@ class ViewController: UIViewController {
         for subView in self.view.subviews {
             if subView.tag == 1001 {
                 let btn = subView as! UIButton
-                self.letterButtons.append(btn)
                 btn.addTarget(self, action: "letterTapped:", forControlEvents: UIControlEvents.TouchUpInside)
+                self.letterButtons.append(btn)
             }
         }
         self.loadLevel()
@@ -39,7 +39,7 @@ class ViewController: UIViewController {
     
     @IBAction func submitButtonTapped(sender: UIButton) {
         if let solutionPosition = self.solutions.indexOf(self.currentAnswerTextField.text!) {
-            self.activatedButtons.removeAll()
+            self.activatedButtons.removeAll() 
             
             var splitClues = self.answersLabel.text!.componentsSeparatedByString("\n")
             splitClues[solutionPosition] = self.currentAnswerTextField.text!
@@ -53,7 +53,6 @@ class ViewController: UIViewController {
                 actionController.addAction(UIAlertAction(title: "Let's go!!", style: UIAlertActionStyle.Default, handler: nil))
                 self.presentViewController(actionController, animated: true, completion: nil)
             }
-            
         }
     }
     
@@ -71,7 +70,11 @@ class ViewController: UIViewController {
     var activatedButtons = [UIButton]()
     var solutions = Array<String>()
     
-    var gameScore = 0
+    var gameScore: Int = 0 {
+        didSet {
+            self.scoreLabel.text = "Score: \(self.gameScore)"
+        }
+    }
     var gameLevel = 1
     
     // MARK: - Custom Methods
@@ -89,12 +92,13 @@ class ViewController: UIViewController {
         var gameLevelContents: NSString!
 
         if let gameLevelFilePath = NSBundle.mainBundle().pathForResource("gameLevel\(self.gameLevel)", ofType: "txt") {
-            do {
-                gameLevelContents = try NSString(contentsOfFile: gameLevelFilePath, usedEncoding: nil)
-            }
-            catch {
-                print("Something awful has just happened.")
-            }
+//            do {
+//                gameLevelContents = try NSString(contentsOfFile: gameLevelFilePath, usedEncoding: nil)
+//            }
+//            catch {
+//                print("Something awful has just happened.")
+//            }
+            gameLevelContents = try! NSString(contentsOfFile: gameLevelFilePath, usedEncoding: nil)
             var gameLevelContentsSeparated: [String] = gameLevelContents.componentsSeparatedByString("\n")
             gameLevelContentsSeparated.shuffle()
             
@@ -113,8 +117,6 @@ class ViewController: UIViewController {
             }
         }
         
-        print("clueString: \(clueString)") // <--- to be erased
-        print("solutionString: \(solutionString)") // <-- to be erased
         self.cluesLabel.text = clueString.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
         self.answersLabel.text = solutionString.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
         letterBits.shuffle()
@@ -124,6 +126,19 @@ class ViewController: UIViewController {
                 self.letterButtons[index].setTitle(letterBits[index], forState: UIControlState.Normal)
             }
         }
+    }
+    
+    func levelUp(action: UIAlertAction!) {
+        ++self.gameLevel
+        self.solutions.removeAll(keepCapacity: true)
+        self.loadLevel()
+        for button in self.letterButtons {
+            button.hidden = false
+        }
+    }
+    
+    func resetGameLevel() {
+        self.gameLevel = 1
     }
 }
 
