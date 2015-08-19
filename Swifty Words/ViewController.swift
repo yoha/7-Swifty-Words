@@ -142,9 +142,5 @@ class ViewController: UIViewController {
             button.hidden = false
         }
     }
-    
-    func resetGameLevel() {
-        self.gameLevel = 1
-    }
 }
 
