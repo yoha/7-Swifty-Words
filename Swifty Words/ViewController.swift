@@ -39,7 +39,7 @@ class ViewController: UIViewController {
     
     @IBAction func submitButtonTapped(sender: UIButton) {
         if let solutionPosition = self.solutions.indexOf(self.currentAnswerTextField.text!) {
-            self.activatedButtons.removeAll() 
+            self.activatedButtons.removeAll()
             
             var splitClues = self.answersLabel.text!.componentsSeparatedByString("\n")
             splitClues[solutionPosition] = self.currentAnswerTextField.text!
@@ -48,9 +48,16 @@ class ViewController: UIViewController {
             self.currentAnswerTextField.text = ""
             ++self.gameScore
             
-            if self.gameScore % 7 == 0 {
-                let actionController = UIAlertController(title: "Congratulations!", message: "Are you ready for the next level?", preferredStyle: UIAlertControllerStyle.Alert)
-                actionController.addAction(UIAlertAction(title: "Let's go!!", style: UIAlertActionStyle.Default, handler: nil))
+            if self.gameScore % 14 == 0 {
+                let actionController = UIAlertController(title: "Congratulations!", message: "You've completed both levels!", preferredStyle: UIAlertControllerStyle.Alert)
+                actionController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+                self.presentViewController(actionController, animated: true, completion: nil)
+                self.gameLevel = 1
+                self.gameScore = 0
+            }
+            else if self.gameScore % 7 == 0 {
+                let actionController = UIAlertController(title: "Easy as pie, right!", message: "Are you ready for the next level?", preferredStyle: UIAlertControllerStyle.Alert)
+                actionController.addAction(UIAlertAction(title: "Let's go!!", style: UIAlertActionStyle.Default, handler: levelUp))
                 self.presentViewController(actionController, animated: true, completion: nil)
             }
         }
@@ -87,7 +94,7 @@ class ViewController: UIViewController {
     
     func loadLevel() {
         var clueString = String()
-        var solutionString = ""
+        var solutionCharCount = ""
         var letterBits = [String]()
         var gameLevelContents: NSString!
 
@@ -109,16 +116,15 @@ class ViewController: UIViewController {
                 clueString += "\(index + 1). \(clue)\n"
                 
                 let solutionWord = answer.stringByReplacingOccurrencesOfString("|", withString: "")
-                solutionString += "\(solutionWord.characters.count) letters\n"
+                solutionCharCount += "\(solutionWord.characters.count) letters\n"
                 self.solutions.append(solutionWord)
                 
-                let bits = answer.componentsSeparatedByString("|")
-                letterBits += bits
+                letterBits += answer.componentsSeparatedByString("|")
             }
         }
         
         self.cluesLabel.text = clueString.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-        self.answersLabel.text = solutionString.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+        self.answersLabel.text = solutionCharCount.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
         letterBits.shuffle()
         self.letterButtons.shuffle()
         if letterBits.count == self.letterButtons.count {
