@@ -43,7 +43,7 @@ class ViewController: UIViewController {
             
             var splitClues = self.answersLabel.text!.componentsSeparatedByString("\n")
             splitClues[solutionPosition] = self.currentAnswerTextField.text!
-            self.answersLabel.text = "\n".join(splitClues)
+            self.answersLabel.text = splitClues.joinWithSeparator("\n")
             
             self.currentAnswerTextField.text = ""
             ++self.gameScore

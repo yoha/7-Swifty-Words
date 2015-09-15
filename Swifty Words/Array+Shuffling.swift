@@ -25,6 +25,7 @@ extension Array {
 	mutating func shuffle() {
 		for i in 0..<(count - 1) {
 			let j = Int(arc4random_uniform(UInt32(count - i))) + i
+            guard i != j else { return }
 			swap(&self[i], &self[j])
 		}
 	}
