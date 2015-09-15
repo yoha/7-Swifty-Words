@@ -64,11 +64,15 @@ class ViewController: UIViewController {
     }
     
     @IBAction func clearButtonTapped(sender: UIButton) {
-        self.currentAnswerTextField.text = ""
-        for button in self.activatedButtons {
-            button.hidden = false
+        UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions(), animations: { () -> Void in
+            for button in self.activatedButtons {
+                button.hidden = false
+                button.titleLabel!.alpha = 1.0
+            }
+            }) { (finished: Bool) -> Void in
+                self.currentAnswerTextField.text = ""
+                self.activatedButtons.removeAll()
         }
-        self.activatedButtons.removeAll()
     }
     
     // MARK: - Stored Properties
@@ -87,9 +91,13 @@ class ViewController: UIViewController {
     // MARK: - Custom Methods
     
     func letterTapped(button: UIButton) {
-        self.currentAnswerTextField.text! += button.titleLabel!.text!
-        self.activatedButtons.append(button)
-        button.hidden = true
+        UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions(), animations: { () -> Void in
+            button.titleLabel!.alpha = 0.0
+            }) { (finished: Bool) -> Void in
+                self.currentAnswerTextField.text! += button.titleLabel!.text!
+                self.activatedButtons.append(button)
+                button.hidden = true
+        }
     }
     
     func loadLevel() {
